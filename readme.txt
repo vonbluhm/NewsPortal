@@ -1,0 +1,1 @@
+Django shell commands are @ /newsportal/commands.txt
