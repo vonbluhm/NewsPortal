@@ -1,0 +1,13 @@
+{% extends 'default.html' %}
+
+{% load custom_filters %}
+
+{% block title %}
+Details
+{% endblock title %}
+
+{% block content %}
+<h1>{{ details.header|censor }}</h1>
+<h2>Published on: {{ details.dateCreated|date:'d.m.Y' }}</h2>
+<p style="font-family:tahoma;font-size:24px">{{ details.text|censor }}</p>
+{% endblock content %}

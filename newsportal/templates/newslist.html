@@ -1,0 +1,30 @@
+{% extends 'default.html' %}
+
+{% load custom_filters %}
+
+{% block title %}
+News list
+{% endblock title %}
+
+{% block content %}
+   <h1>News list</h1>
+   <h2>News in total: {{ allnews|length }}</h2>
+   {% if allnews %}
+       <table>
+           <tr>
+               <td>Title</td>
+               <td>Date</td>
+               <td>Preview</td>
+           </tr>
+           {% for post in allnews %}
+           <tr>
+               <td>{{ post.header }}</td>
+               <td>{{ post.dateCreated|date:'d.m.Y' }}</td>
+               <td>{{ post.text|truncatewords:20|censor }}</td>
+           </tr>
+           {% endfor %}
+       </table>
+   {% else %}
+       <h2>No news yet!</h2>
+   {% endif %}
+{% endblock content %}
