@@ -32,6 +32,17 @@
                                 <span class="sr-only">(current)</span>
                             </a>
                         </li>
+                        {% if request.user.pk %}
+                        <li class="nav-item active">
+                            <a class="nav-link" href="{% url 'user_edit' request.user.pk %}">Profile
+                            </a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/accounts/login/">Sign in
+                            </a>
+                        </li>
+                        {% endif %}
                     </ul>
                 </div>
             </div>
