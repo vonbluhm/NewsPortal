@@ -9,8 +9,11 @@ News list
 
 {% block content %}
    <h1>News list</h1>
-   <h2>News in total: {{ allnews|length }}</h2>
-   {% if allnews %}
+   <h2>News in total: {{ category_news_list|length }}</h2>
+   {% if is_not_subscriber %}
+      <p class="text-center"><a href="{% url 'subscribe' category.id %}" class="btn btn-secondary btn-sm">Subscribe</a> </p>
+   {% endif %}
+   {% if category_news_list %}
        <table>
            <tr>
                <td>Title</td>
@@ -18,7 +21,7 @@ News list
                <td>Date</td>
                <td>Preview</td>
            </tr>
-           {% for post in allnews %}
+           {% for post in category_news_list %}
            <tr>
                <td>{{ post.header }}</td>
                <td>
