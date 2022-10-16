@@ -156,3 +156,9 @@ SERVER_EMAIL = os.getenv('SEM')
 
 APSCHEDULER_DATETIME_FORMAT = 'N j, Y, f:s a'
 APSCHEDULER_RUN_NOW_TIMEOUT = 25
+
+CELERY_broker_url = 'redis://localhost:6379'
+result_backend = 'redis://localhost:6379'
+accept_content = ['application/json']
+task_serializer = 'json'
+result_serializer = 'json'
