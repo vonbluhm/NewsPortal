@@ -1,13 +1,18 @@
 {% extends 'default.html' %}
 
+{% load cache %}
 {% block content %}
 <h1>Edit user data</h1>
 <hr>
+{% cache 120 save_profile %}
+{% block save_profile %}
 <form action="" method="post">
     {% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Save" />
 </form>
+{% endblock save_profile %}
+{% endcache %}
 {% if is_not_author %}
 <button> <a href="/news/upgrade/"> I wanna be the author</a> </button>
 <button> <a href="/accounts/logout/">Sign out</a> </button>

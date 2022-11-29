@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.contrib.auth.models import User, Group
 from django.contrib.auth.decorators import login_required
 
+from django.core.cache import cache
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.urls import reverse_lazy
@@ -58,6 +59,15 @@ class PostDetail(DetailView):
     model = Post
     template_name = 'details.html'
     context_object_name = 'details'
+
+    def get_object(self, *args, **kwargs):
+        obj = cache.get(f'post-{self.kwargs["pk"]}', None)
+
+        if not obj:
+            obj = super().get_object(queryset=self.queryset)
+            cache.set(f'post-{self.kwargs["pk"]}', obj)
+
+        return obj
 
 
 class PostCreate(LoginRequiredMixin, CreateView, PermissionRequiredMixin):

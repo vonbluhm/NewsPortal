@@ -1,6 +1,9 @@
+"""
+filters to facilitate search
+"""
 from django_filters import FilterSet, CharFilter, DateFilter, ModelChoiceFilter
 from django.forms import DateInput
-from .models import Post, Category
+from .models import Category
 
 
 class PostFilter(FilterSet):

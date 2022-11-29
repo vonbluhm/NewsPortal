@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.core.cache import cache
 from django.db import models
 from django.db.models import Sum
 from django.urls import reverse
@@ -6,17 +7,20 @@ from django.urls import reverse
 
 class Author(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    ratingAuthor = models.IntegerField(default=0)
+    rating_author = models.IntegerField(default=0)
 
     def update_rating(self):
+        """
+        Refreshes the rating of a post
+        """
         posts = self.post_set.aggregate(rating=Sum('rating'))
-        pR = 0
-        pR += posts.get('rating')
+        post_rating = 0
+        post_rating += posts.get('rating')
 
         comments = self.user.comment_set.aggregate(rating=Sum('rating'))
-        cR = 0
-        cR += comments.get('rating')
-        self.ratingAuthor = pR * 3 + cR
+        comment_rating = 0
+        comment_rating += comments.get('rating')
+        self.rating_author = post_rating * 3 + comment_rating
         self.save()
 
     def __str__(self):
@@ -28,7 +32,7 @@ class Category(models.Model):
     subscribers = models.ManyToManyField(User, related_name='categories')
 
     def __str__(self):
-        return self.category_name
+        return str(self.category_name)
 
 
 class Post(models.Model):
@@ -59,11 +63,14 @@ class Post(models.Model):
     def preview(self):
         if len(str(self.text)) > 124:
             return f'{self.text[:124]}...'
-        else:
-            return f'{self.text}'
+        return f'{self.text}'
 
     def get_absolute_url(self):
         return reverse('post_detail', args=[str(self.pk)])
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        cache.delete(f'post-{self.pk}')
 
 
 class PostCategory(models.Model):
